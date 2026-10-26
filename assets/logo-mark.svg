@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128"><rect width="128" height="128" rx="26" fill="#0B1B33"/><rect x="6" y="6" width="116" height="116" rx="21" fill="none" stroke="#F5C518" stroke-width="3"/>
+<g transform="translate(14,30)"><g id="truck">
+ <rect x="0" y="8" width="56" height="28" rx="3" fill="#F5C518"/>
+ <rect x="4" y="12" width="48" height="5" rx="1.5" fill="#0B1B33" opacity=".25"/>
+ <path d="M64 38 V14 H80 L90 24 H96 Q100 24 100 28 V38 Z" fill="#F5C518"/>
+ <path d="M68 17 H79 L86 24 H68 Z" fill="#0B1B33"/>
+ <rect x="74" y="4" width="3.5" height="12" rx="1.5" fill="#F5C518"/>
+ <rect x="96" y="30" width="5" height="4" fill="#fff"/>
+ <rect x="0" y="36" width="58" height="3" fill="#F5C518"/><rect x="56" y="34" width="10" height="3" fill="#F5C518"/><rect x="64" y="36" width="38" height="3" rx="1.5" fill="#F5C518"/>
+ <g fill="#0B1B33" stroke="#F5C518" stroke-width="2.5"><circle cx="12" cy="42" r="6"/><circle cx="26" cy="42" r="6"/><circle cx="74" cy="42" r="6"/><circle cx="90" cy="42" r="6"/></g>
+</g></g>
+<text x="64" y="106" text-anchor="middle" font-family="Arial Black,Arial,sans-serif" font-weight="900" font-size="20" fill="#F5C518" letter-spacing="2">SSR</text></svg>
