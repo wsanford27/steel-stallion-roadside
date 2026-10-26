@@ -83,6 +83,21 @@ footer.site{background:#070d19;padding:44px 0 90px;color:var(--mut);font-size:.9
 @media(max-width:860px){nav{display:none}.hero .wrap,.area,.contact{grid-template-columns:1fr}.hero{padding:36px 0 56px}section{padding:56px 0}footer.site .wrap{grid-template-columns:1fr}.row{grid-template-columns:1fr}
  .hide-m{display:none}.mcall{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:55;padding:10px 92px 10px 12px;background:#0b1426f2;border-top:1px solid #ffffff1a}.mcall .btn{flex:1;justify-content:center}
  #chatBtn{bottom:12px;right:14px;width:56px;height:56px}#chat{right:12px;bottom:78px}}
+
+#chatBtn{width:auto!important;height:58px!important;border-radius:999px!important;padding:0 22px 0 18px;gap:10px;display:flex!important;align-items:center;font:700 16px Montserrat,sans-serif;color:var(--navy);animation:pulse 2.2s infinite}
+#chatBtn svg{width:24px}#chatBtn.hide{display:none!important}
+@keyframes pulse{0%{box-shadow:0 0 0 0 #ffc62b99,0 10px 30px #0009}70%{box-shadow:0 0 0 16px #ffc62b00,0 10px 30px #0009}100%{box-shadow:0 0 0 0 #ffc62b00,0 10px 30px #0009}}
+@media (prefers-reduced-motion:reduce){#chatBtn{animation:none}}
+#chatPeek{position:fixed;right:20px;bottom:92px;z-index:59;max-width:290px;background:#fff;color:#0b1730;border-radius:16px;padding:14px 34px 14px 16px;box-shadow:0 12px 34px #0008;opacity:0;transform:translateY(10px);pointer-events:none;transition:.35s}
+#chatPeek.show{opacity:1;transform:none;pointer-events:auto}#peekOpen{cursor:pointer}#peekOpen b{display:block;margin-bottom:4px}#peekOpen span{font-size:14px;line-height:1.4}
+#peekX{position:absolute;top:6px;right:8px;border:0;background:none;font-size:20px;cursor:pointer;color:#556}
+.m.typing{padding:10px 14px}.dots i{display:inline-block;width:7px;height:7px;margin:0 2px;border-radius:50%;background:#9ab;animation:dt 1s infinite}.dots i:nth-child(2){animation-delay:.15s}.dots i:nth-child(3){animation-delay:.3s}
+@keyframes dt{0%,80%,100%{opacity:.3;transform:none}40%{opacity:1;transform:translateY(-3px)}}
+.cbf{display:grid;gap:7px;margin-top:8px}.cbf input:not([type=checkbox]){padding:9px 10px;border-radius:9px;border:1px solid #ffffff33;background:#0b1730;color:#fff;font:inherit}.cbf label{font-size:13px;display:flex;gap:6px;align-items:center}
+.qr{flex-wrap:nowrap!important;overflow-x:auto}.qr button{white-space:nowrap;flex:none}
+html,body{overflow-x:clip}
+@media(max-width:480px){header .btn-y{display:none!important}}
+@media(max-width:860px){.mcall{padding-right:12px!important}#chatBtn{bottom:78px!important;right:14px!important;height:50px!important;padding:0 16px;font-size:15px}#chatPeek{right:12px;bottom:140px;max-width:calc(100vw - 24px)}#chat{bottom:78px!important;max-height:calc(100dvh - 96px)!important}}
 </style>
 </head>
 <body>
@@ -117,7 +132,7 @@ const CONFIG = {
     <span class="badge"><i class="dot"></i> Dispatch open 24/7 · <span data-city></span></span>
     <h1>Stuck on the road? <span>Help is on the way.</span></h1>
     <p>Fast, friendly towing and roadside assistance across the Chattanooga area — day or night, rain or shine. One call and a local driver is rolling to you.</p>
-    <div class="ctas"><a class="btn btn-y" data-tel>📞 Call now</a><a class="btn btn-o" href="#contact">Request help →</a></div>
+    <div class="ctas"><a class="btn btn-y" data-tel>📞 Call now</a><a class="btn btn-o" href="#chat" data-chat>💬 Chat now</a><a class="btn btn-o" href="#contact">Request help →</a></div>
     <div class="stats"><div><b>24/7</b><small>365 days a year</small></div><div><b data-eta></b><small>Typical arrival*</small></div><div><b data-years></b><small>Years serving Chattanooga*</small></div></div>
   </div>
   <img src="assets/hero.svg" alt="Tow truck illustration on a highway at night" width="600" height="400">
@@ -197,9 +212,10 @@ const CONFIG = {
 
 <div class="mcall"><a class="btn btn-y" data-tel>📞 Call now — 24/7</a></div>
 
-<button id="chatBtn" aria-label="Open chat"><svg viewBox="0 0 24 24"><path d="M4 4h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H8l-4 4V6a2 2 0 0 1 2-2z"/></svg></button>
+<div id="chatPeek" role="status"><button id="peekX" aria-label="Dismiss">×</button><div id="peekOpen"><b>👋 Need a hand?</b><span>Broken down or locked out? Chat with us — we reply instantly, 24/7.</span></div></div>
+<button id="chatBtn" aria-label="Chat with us"><svg viewBox="0 0 24 24"><path d="M4 4h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H8l-4 4V6a2 2 0 0 1 2-2z"/></svg><span>Chat with us</span></button>
 <div id="chat" role="dialog" aria-label="Chat">
-  <div class="ch"><div><b>Roadside Assistant</b><small>● Online 24/7</small></div><button onclick="toggleChat()" aria-label="Close">×</button></div>
+  <div class="ch"><div><b>Roadside Assistant</b><small>● Online 24/7</small></div><button onclick="closeChat()" aria-label="Close">×</button></div>
   <div id="msgs"></div>
   <div class="qr" id="qr"></div>
   <form class="ci" onsubmit="send(event)"><input id="cin" placeholder="Type a question…" autocomplete="off"><button class="btn btn-y">➤</button></form>
@@ -241,39 +257,67 @@ function fillLoc(){getLoc().then(u=>document.getElementById('locField').value=u)
 const smsLink=t=>`sms:${C.SMS_TEL}${/iPhone|iPad/.test(navigator.userAgent)?'&':'?'}body=${encodeURIComponent(t)}`;
 
 /* chat assistant */
-const msgs=document.getElementById('msgs'),chat=document.getElementById('chat');
-function toggleChat(){chat.classList.toggle('open');if(chat.classList.contains('open')&&!msgs.children.length)greet();}
-document.getElementById('chatBtn').onclick=toggleChat;
-function add(h,who='b'){const d=document.createElement('div');d.className='m '+who;d.innerHTML=h;msgs.appendChild(d);msgs.scrollTop=1e9}
+const msgs=document.getElementById('msgs'),chat=document.getElementById('chat'),cbtn=document.getElementById('chatBtn'),peek=document.getElementById('chatPeek');
+function openChat(){chat.classList.add('open');cbtn.classList.add('hide');hidePeek();if(!msgs.children.length)greet();setTimeout(()=>document.getElementById('cin').focus({preventScroll:true}),50)}
+function closeChat(){chat.classList.remove('open');cbtn.classList.remove('hide')}
+function toggleChat(){chat.classList.contains('open')?closeChat():openChat()}
+function hidePeek(){peek.classList.remove('show');try{localStorage.setItem('ssr_peek','1')}catch(e){}}
+cbtn.onclick=openChat;
+document.getElementById('peekOpen').onclick=openChat;document.getElementById('peekX').onclick=e=>{e.stopPropagation();hidePeek()};
+$('[data-chat]').forEach(b=>b.onclick=e=>{e.preventDefault();openChat()});
+let seen='';try{seen=localStorage.getItem('ssr_peek')}catch(e){}
+if(!seen)setTimeout(()=>{if(!chat.classList.contains('open'))peek.classList.add('show')},4000);
+function add(h,who='b'){const d=document.createElement('div');d.className='m '+who;d.innerHTML=h;msgs.appendChild(d);msgs.scrollTop=1e9;return d}
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const callBtns=()=>`<br><a href="tel:${C.PHONE_TEL}">📞 Call ${C.PHONE}</a> · <a href="${smsLink('Hi, I need roadside help.')}">💬 Text us</a>`;
-const QR=['Services','Pricing','Service area','Hours','What info do you need?','📍 Share my location','📞 Call now'];
-document.getElementById('qr').innerHTML=QR.map(q=>`<button type="button">${q}</button>`).join('');
-document.querySelectorAll('#qr button').forEach(b=>b.onclick=()=>handle(b.textContent));
-function greet(){add(`Hi! 👋 I'm the ${C.BUSINESS_NAME} assistant. Need help right now? Call or text us 24/7, or ask me anything.${callBtns()}`)}
-const R=[
- [/(share|send).*(loc)|my location|where am i|📍/i,'loc'],
- [/^📞|call now|talk|human|person|emergenc|urgent/i,()=>`For the fastest help, call dispatch now:${callBtns()}`],
- [/price|cost|how much|quote|rate|charge|fee/i,()=>`Pricing depends on the service, distance and vehicle, so please <b>call for a free, upfront quote</b> — you'll know the price before we dispatch.${callBtns()}`],
- [/hour|open|24|night|weekend|holiday|when/i,()=>`We're open <b>24 hours a day, 7 days a week</b>, including holidays.${callBtns()}`],
- [/area|where|serve|cover|chattanooga|east ridge|red bank|signal|hixson|ooltewah|collegedale|lookout|rossville|georgia|hamilton/i,()=>`We serve ${C.AREAS.join(', ')}. Outside that? Ask — we can often still help.`],
- [/info|ready|need to know|prepare|what do you need/i,()=>`Please have ready:<br>• Your exact location (tap “📍 Share my location”)<br>• Vehicle year, make, model & color<br>• What happened<br>• Where you want it towed (if needed)<br>• A callback number`],
- [/long|fast|eta|arriv|wait/i,()=>`Typical arrival in the Chattanooga area is about <b>${C.ETA}</b>, depending on traffic and weather.`],
- [/tow/i,()=>`Yes, we tow cars, trucks and SUVs — local or long distance. Call for a quote.${callBtns()}`],
- [/jump|battery|dead|won'?t start/i,()=>`We do jump starts 24/7 and can test your battery.${callBtns()}`],
- [/tire|flat/i,()=>`We'll change a flat to your spare, or tow you to a tire shop if there's no spare.${callBtns()}`],
- [/lock|keys/i,()=>`We offer damage-free lockout service.${callBtns()}`],
- [/gas|fuel|empty/i,()=>`Out of gas? We'll deliver enough fuel to get you to a station.${callBtns()}`],
- [/stuck|mud|ditch|sand|winch|recover/i,()=>`We do winching and recovery from mud, sand and ditches.${callBtns()}`],
- [/insur|aaa|motor club|pay|card|cash/i,()=>`We accept major payment methods and give detailed receipts for insurance/roadside-plan reimbursement. Ask dispatch for details.`],
- [/service|what do you|offer|help with/i,()=>`We offer: 🚛 Towing · 🔋 Jump starts · 🛞 Flat tire changes · 🔑 Lockouts · ⛽ Fuel delivery · 🪝 Winching & recovery.`],
- [/^(hi|hello|hey|yo)\b/i,()=>`Hi! How can I help? Tap a button below or type a question.`],
- [/thank/i,()=>`You're welcome! Stay safe — turn on your hazards and stay clear of traffic.`]];
-function handle(t){add(t.replace(/</g,'&lt;'),'u');setTimeout(()=>{const r=R.find(([re])=>re.test(t));
- if(!r)return add(`I'm not sure about that one, but our dispatcher can help right away.${callBtns()}`);
- if(r[1]==='loc'){add('Getting your location…');getLoc().then(u=>add(`Got it! 📍 <a href="${u}" target="_blank" rel="noopener">View on Google Maps</a><br><a href="${smsLink('I need roadside help. My location: '+u)}">💬 Text my location to dispatch</a><br><a href="tel:${C.PHONE_TEL}">📞 Or call ${C.PHONE}</a>`)).catch(e=>add(e+callBtns()));return}
- add(r[1]())},350)}
+const QR=['🚛 Tow me','🔋 Jump start','🛞 Flat tire','🔑 Locked out','⛽ Out of gas','💲 Pricing','🗺 Service area','📍 Share my location','📲 Request a callback','📞 Call now'];
+function chips(list){document.getElementById('qr').innerHTML=list.map(q=>`<button type="button">${q}</button>`).join('');document.querySelectorAll('#qr button').forEach(b=>b.onclick=()=>handle(b.textContent))}
+chips(QR);
+function greet(){add(`Hi! 👋 I'm the ${esc(C.BUSINESS_NAME)} assistant. Tell me what's going on — a tow, dead battery, flat, lockout? I can also share your location with dispatch or set up a callback.${callBtns()}`)}
+const SVC=`We offer, 24/7:<br>🚛 Towing (cars, trucks, SUVs)<br>🚚 Heavy-duty & semi towing — ask dispatch<br>🏍 Motorcycle towing<br>🔋 Jump starts<br>🛞 Flat tire changes<br>🔑 Lockouts<br>⛽ Fuel delivery<br>🪝 Winch-outs & recovery`;
+/* intents: [name, keywords, reply] — keywords matched as words with typo tolerance */
+const INTENTS=[
+ ['loc',['share location','my location','where am i','location','gps','pin','📍'],'loc'],
+ ['cb',['callback','call back','call me','request a callback','📲'],'cb'],
+ ['call',['call now','talk','human','person','someone','dispatcher','real person','📞'],()=>`For the fastest help, call dispatch now:${callBtns()}`],
+ ['accident',['accident','crash','wreck','collision','hit','fender bender','totaled'],()=>`I'm sorry — are you okay? If anyone is hurt, <b>call 911 first</b>. Turn on your hazards and stay clear of traffic. Once it's safe, we can tow your vehicle from the scene.${callBtns()}`],
+ ['semi',['semi','big rig','18 wheeler','eighteen wheeler','tractor trailer','heavy duty','heavy','box truck','rv','bus','commercial','dually','dump truck'],()=>`Yes — we handle <b>heavy-duty, semi and big rig</b> calls. Tell dispatch the truck type, weight and whether it's loaded so we send the right equipment.${callBtns()}`],
+ ['moto',['motorcycle','motorbike','bike','harley','scooter','dirt bike'],()=>`Yes, we tow motorcycles with proper straps and wheel chocks so your bike arrives safely.${callBtns()}`],
+ ['price',['price','pricing','cost','how much','quote','rate','charge','fee','expensive','cheap','💲'],()=>`Prices depend on the service, distance and vehicle, so dispatch gives you a <b>quote on the phone</b> before anyone rolls. No surprises.${callBtns()}`],
+ ['pay',['pay','payment','card','credit','debit','cash','venmo','apple pay','zelle'],()=>`We take cards and cash — ask dispatch about other payment options when you call.`],
+ ['ins',['insurance','aaa','motor club','roadside plan','claim','reimburse','geico','progressive','state farm'],()=>`We can give you a detailed receipt for your insurance or roadside plan. Ask dispatch whether we work directly with your provider.${callBtns()}`],
+ ['hours',['hours','open','24/7','24 7','night','weekend','holiday','sunday','closed','late'],()=>`We're open <b>24 hours a day, 7 days a week</b>, including holidays.${callBtns()}`],
+ ['eta',['how long','how fast','eta','arrive','arrival','wait','soon','minutes'],()=>`Typical arrival in the Chattanooga area is about <b>${esc(C.ETA)}</b>, depending on traffic and weather. Dispatch will give you a live estimate.`],
+ ['area',['area','service area','where','serve','cover','near','chattanooga','east ridge','red bank','signal mountain','hixson','ooltewah','collegedale','lookout mountain','rossville','georgia','hamilton','🗺'],()=>`We serve ${C.AREAS.map(esc).join(', ')}. Outside that? Ask — we can often still help.`],
+ ['info',['info','ready','need to know','prepare','what do you need'],()=>`Please have ready:<br>• Your exact location (tap “📍 Share my location”)<br>• Vehicle year, make, model & color<br>• What happened<br>• Where you want it towed (if needed)<br>• A callback number`],
+ ['jump',['jump','jump start','battery','dead','won\'t start','wont start','no start','click','🔋'],()=>`We do jump starts 24/7 and can test your battery. If it won't hold a charge, we can tow you to a shop.${callBtns()}`],
+ ['tire',['tire','flat','blowout','spare','puncture','tyre','🛞'],()=>`We'll swap your flat for the spare. No spare? We can tow you to a tire shop.${callBtns()}`],
+ ['lock',['lock','locked','lockout','keys','key','locked out','🔑'],()=>`We offer fast, damage-free lockout service. Is a child or pet locked inside? If so, call 911 too.${callBtns()}`],
+ ['fuel',['gas','fuel','empty','diesel','ran out','out of gas','⛽'],()=>`Out of gas or diesel? We'll bring enough fuel to get you to a station.${callBtns()}`],
+ ['winch',['stuck','mud','ditch','sand','snow','winch','winch out','recover','recovery','off road','embankment','🪝'],()=>`We do winch-outs and recovery from mud, ditches, snow and embankments.${callBtns()}`],
+ ['tow',['tow','towing','tow truck','wrecker','flatbed','haul','🚛'],()=>`Yes, we tow cars, trucks and SUVs, local or long distance, on a flatbed or wheel-lift. Where should it go?${callBtns()}`],
+ ['svc',['services','service','what do you','offer','help with','do you do'],()=>SVC],
+ ['hi',['hi','hello','hey','yo','sup','good morning','good evening'],()=>`Hi! How can I help? Tap a button below or type what's going on.`],
+ ['thx',['thanks','thank','thank you','ty','appreciate'],()=>`You're welcome! Stay safe — hazards on and stay clear of traffic.`],
+ ['bye',['bye','goodbye','that\'s all','no thanks'],()=>`Take care! We're here 24/7 if you need us.`]];
+function lev(a,b){if(Math.abs(a.length-b.length)>2)return 9;const d=[...Array(b.length+1).keys()];for(let i=1;i<=a.length;i++){let p=d[0];d[0]=i;for(let j=1;j<=b.length;j++){const t=d[j];d[j]=Math.min(d[j]+1,d[j-1]+1,p+(a[i-1]===b[j-1]?0:1));p=t}}return d[b.length]}
+function score(text,kws){const t=text.toLowerCase(),w=t.match(/[a-z0-9']+|\p{Extended_Pictographic}/gu)||[];let s=0;
+ for(const k of kws){if(k.includes(' ')||/\P{L}/u.test(k)&&!/^[a-z']+$/.test(k)){if(t.includes(k))s+=3;continue}
+  if(w.includes(k)||w.some(x=>x.startsWith(k)&&k.length>=4))s+=2;else if(k.length>=5&&w.some(x=>x.length>=4&&lev(x,k)<=(k.length>=7?2:1)))s+=2}return s}
+function match(t){let best=null,bs=0;for(const it of INTENTS){const s=score(t,it[1]);if(s>bs){bs=s;best=it}}return best}
+function typing(){return add('<span class="dots"><i></i><i></i><i></i></span>','b typing')}
+function reply(fn){const d=typing();setTimeout(()=>{d.remove();fn()},500+Math.random()*400)}
+function handle(t){add(esc(t),'u');const r=match(t);
+ reply(()=>{if(!r)return add(`Hmm, I'm not sure about that one — but a real dispatcher can help right away. You can also tap a button below.${callBtns()}`);
+  if(r[2]==='loc')return doLoc();if(r[2]==='cb')return cbForm();add(r[2]())})}
+function doLoc(){add('📍 Getting your location… (allow location access if asked)');getLoc().then(u=>add(`Got it! <a href="${u}" target="_blank" rel="noopener">View on Google Maps</a><br><a href="${smsLink('I need roadside help. My location: '+u)}">💬 Text my location to dispatch</a><br><a href="tel:${C.PHONE_TEL}">📞 Or call ${C.PHONE}</a>`)).catch(e=>add(esc(e)+' You can also type your address or nearest exit.'+callBtns()))}
+function cbForm(){const d=add(`Sure — leave your details and we'll text dispatch for you:<form class="cbf"><input name="n" placeholder="Your name" required autocomplete="name"><input name="p" type="tel" placeholder="Your phone" required autocomplete="tel"><input name="q" placeholder="What's wrong? (e.g. flat tire on I-24)" required><label><input type="checkbox" name="l"> Include my location</label><button class="btn btn-y">Send request</button></form>`);
+ d.querySelector('form').onsubmit=async e=>{e.preventDefault();const f=e.target,v=n=>f.elements[n].value.trim();let loc='';
+  if(f.elements.l.checked){try{loc=await getLoc()}catch(x){}}
+  const body=`Callback request\nName: ${v('n')}\nPhone: ${v('p')}\nProblem: ${v('q')}`+(loc?`\nLocation: ${loc}`:'');
+  add(`Thanks, ${esc(v('n'))}! Your messages app will open with the details filled in — just hit send.<br><a href="${smsLink(body)}">💬 Open text again</a>`);f.remove();location.href=smsLink(body)}}
 function send(e){e.preventDefault();const i=document.getElementById('cin');if(i.value.trim())handle(i.value.trim());i.value=''}
-if(location.hash==='#chat')toggleChat();
+if(location.hash==='#chat')openChat();
 </script>
 </body>
 </html>
